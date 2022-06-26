@@ -3,18 +3,15 @@
 let userName = "";
 let phoneNumber = "";
 let verifypassword = "";
+let otp = "";
 let passwordRegEx=/((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{6,40})/;
 
 function setphonenumber(){
     phoneNumber = $("#phonenumber").val();
 }
 
-function setuserpassword(){
-    password = $("#password").val();
-    var valid=passwordRegEx.exec(password);
-    if (!valid){
-        alert('Must be 6 digits, upper, lower, number, and symbol');
-    }
+function setonetimepassword(){
+    password = $("#otp").val();
 }
 
 function setverifypassword(){
@@ -51,18 +48,16 @@ function sendtext(){
         type : 'POST',
         url: 'https://dev.stedi.me/twofactorlogin/'+ phoneNumber,
         contentType: 'application/text',
-        dataType: 'text'
+        dataType: 'text',
     })
 }
 
 
 function userlogin(){
-    setuserpassword();
-    setusername();
     $.ajax({
         type: 'POST',
-        url: '/login',
-        data: JSON.stringify({userName, password}),
+        url: 'https://dev.stedi.me/twofactorlogin',
+        data: JSON.stringify({phoneNumber, oneTimePassword : otp }),
         success: function(data) {
             window.location.href = "/timer.html#"+data;//add the token to the url
         },
@@ -133,6 +128,6 @@ var enterFunction = (event) =>{
     }
 }
 
-var passwordField = document.getElementById("password");
+var passwordField = document.getElementById("otp");
 
 passwordField.addEventListener("keyup", enterFunction);
